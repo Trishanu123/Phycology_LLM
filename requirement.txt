@@ -1,3 +1,2 @@
-openai
-streamlit
-llama-index
+
+pip install openai streamlit llama-index
