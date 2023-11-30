@@ -3,8 +3,8 @@ import json
 import os
 import streamlit as st
 from llama_index import GPTVectorStoreIndex, SimpleDirectoryReader, LLMPredictor, PromptHelper, ServiceContext
-
-os.environ['OPENAI_API_KEY'] = "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"
+import cred
+os.environ['OPENAI_API_KEY'] =  cred.api_key
 
 documents = SimpleDirectoryReader('/Users/trishanu/Downloads/Phycology_LLM').load_data()
 index = GPTVectorStoreIndex(documents)
@@ -37,7 +37,7 @@ class Chatbot:
         with open(filename, 'w') as f:
             json.dump(self.chat_history, f)
 
-bot = Chatbot("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", index=index)
+bot = Chatbot(cred.api_key, index=index)
 bot.load_chat_history("chat_history.json")
 
 st.title('Phycology Chat Bot')
