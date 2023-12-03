@@ -4,7 +4,9 @@ import os
 import streamlit as st
 from llama_index import GPTVectorStoreIndex, SimpleDirectoryReader, LLMPredictor, PromptHelper, ServiceContext
 import cred
-os.environ['OPENAI_API_KEY'] =  cred.api_key
+import time
+
+os.environ['OPENAI_API_KEY'] = cred.api_key
 
 documents = SimpleDirectoryReader('/Users/trishanu/Downloads/Phycology_LLM').load_data()
 index = GPTVectorStoreIndex(documents)
@@ -40,10 +42,15 @@ class Chatbot:
 bot = Chatbot(cred.api_key, index=index)
 bot.load_chat_history("chat_history.json")
 
-st.title('Phycology Chat Bot')
+st.title('Psychology Chat Bot')
 
 user_input = st.text_input("You: ", "")
 if st.button("Send"):
-    response = bot.generate_response(user_input)
+    while True:
+        try:
+            response = bot.generate_response(user_input)
+            break
+        except openai.RateLimitError:
+            print("Rate limit exceeded, waiting for 1 minute...")
+            time.sleep(60)
     st.write(f"Bot: {response['content']}")
-
